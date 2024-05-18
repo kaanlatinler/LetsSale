@@ -1,0 +1,45 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Servis";
+}
+
+@model IEnumerable<LetsSale.Models.CarDetailsViewModel>
+
+<div class="container-fluid">
+    <div class="row">
+        @foreach (var item in Model.DistinctBy(x => x.ServiceCars))
+        {
+            foreach (var car in item.Services.Where(x=>x.ServiceCars.SUserID == item.UserDetails.UMainID))
+            {
+                <div class="col-sm-6 mb-3 mb-sm-0">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title"><strong> @car.UserCars.CarBrand @car.UserCars.CarName </strong></h5>
+                            <ul class="list-group mb-3">
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Araç Plakası
+                                    <span class="badge text-bg-primary rounded-pill">@car.UserCars.CarPlateNumber</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Araç Yılı
+                                    <span class="badge text-bg-primary rounded-pill">@car.UserCars.CarYear</span>
+                                </li>
+                            </ul>
+                            <h5 class="card-title"><strong>Servis Bilgisi</strong></h5>
+                            <p class="card-text">@car.EmployeeDetails.EName @car.EmployeeDetails.ELastName</p>
+                            <h5 class="card-title"><strong>Servise Giriş</strong></h5>
+                            <p class="card-text">@car.ServiceCars.SstartDate</p>
+                            <h5 class="card-title"><strong>Servisten Çıkış</strong></h5>
+                            <p class="card-text">@car.ServiceCars.SfinishDate</p>
+                            <h5 class="card-title"><strong>İşlem</strong></h5>
+                            <p class="card-text">@car.ServiceCars.SDesc</p>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>

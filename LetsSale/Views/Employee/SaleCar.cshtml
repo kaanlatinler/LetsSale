@@ -1,0 +1,121 @@
+﻿@{
+    Layout = "_LayoutAdmin";
+    ViewData["Title"] = "Main";
+    ViewData["AdminButton"] = "Araç Ekle";
+    ViewData["addLink"] = Url.Action("AddCar", "Employee");
+}
+
+@model LetsSale.Models.SaleCarViewModel
+
+
+ @* <-- Deleted Modal --> *@
+<div class="modal fade" id="DeletedModal" tabindex="-1" aria-labelledby="DeletedModal" aria-hidden="true">
+    <div class="modal-dialog">
+        @if (TempData["SuccessMsg"] != null)
+        {
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="DeletedModalLbl">@TempData["SuccessTitle"]</h5>
+                </div>
+                <div class="modal-body">
+                    @TempData["SuccessMsg"]
+                </div>
+            </div>
+        }
+    </div>
+</div>
+        <div class="container-fluid">
+        <form method="post">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                Alıcı Bilgi
+                            </h5>
+                            <form method="post">
+                                <label class="form-label mt-2" for="CustomerName">Ad</label>
+                                <input asp-for="UserDetails.UserName" type="text" class="form-control" id="CustomerName" />
+                                <label class="form-label mt-2" for="CustomerLastName">Soyad</label>
+                                <input asp-for="UserDetails.UserLastName" type="text" class="form-control" id="CustomerLastName" />
+                                <label class="form-label mt-2" for="CustomerMail">E-posta</label>
+                                <input asp-for="UserDetails.UserEmail" type="email" class="form-control" id="CustomerMail" />
+                                <label class="form-label mt-2" for="CustomerPhone">Telefon Numarası</label>
+                                <input asp-for="UserDetails.UserPhoneNumber" type="number" class="form-control" id="CustomerPhone" />
+                                <!------------->
+                                <input type="hidden" asp-for="CarDetails.Categories.CatID" value="@TempData["CatID"]" />
+                                <input type="hidden" asp-for="CarDetails.Cars.CarBrand" value="@TempData["CarBrand"]" />
+                                <input type="hidden" asp-for="CarDetails.Cars.CarName" value="@TempData["CarName"]" />
+                                <input type="hidden" asp-for="CarDetails.Cars.CarPlateNumber" value="@TempData["CarPlateNumber"]" />
+                                <input type="hidden" asp-for="CarDetails.Cars.CarPrice" value="@TempData["CarPrice"]" />
+                                <input type="hidden" asp-for="CarDetails.Cars.CMainID" value="@TempData["CMainID"]" />
+                                <input type="hidden" asp-for="CarDetails.Cars.CarMainPic" value="@TempData["CarMainPic"]" />
+                                <input type="hidden" asp-for="CarDetails.Cars.CarsID" value="@TempData["CarsID"]" />
+                                <input type="hidden" asp-for="CarDetails.Cars.CarYear" value="@TempData["CarYear"]" />
+                                <!------------->
+                                <div class="btn-group mt-3 w-100" role="group" aria-label="Basic outlined example">
+                                    <a class="btn btn-outline-danger w-50">Vazgeç</a>
+                                    <button type="submit" class="btn btn-outline-primary w-50">İşlemi Bitir</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                Araç Bilgi
+                            </h5>
+                            <ul class="list-group mt-4">
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Beygir Gücü
+                                <span class="badge text-bg-primary rounded-pill">@TempData["CarHP"] HP</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Tork
+                                <span class="badge text-bg-primary rounded-pill">@TempData["CarTorque"] nm</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Azami Hız
+                                <span class="badge text-bg-primary rounded-pill">@TempData["CarMaxSpeed"] km/s</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Yakıt Kapasitesi
+                                <span class="badge text-bg-primary rounded-pill">@TempData["CarMaxFuelTankCapacity"] lt.</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Şanzıman
+                                <span class="badge text-bg-primary rounded-pill">@TempData["CarTransmission"]</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Bagaj Hacmi
+                                <span class="badge text-bg-primary rounded-pill">@TempData["CarCargoVolume"] lt.</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Araç Yılı
+                                <span class="badge text-bg-primary rounded-pill">@TempData["CarYear"]</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Araç Fiyatı
+                                <span class="badge text-bg-primary rounded-pill">@TempData["CarPrice"] ₺</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Araç Plakası
+                                <span class="badge text-bg-primary rounded-pill">@TempData["CarPlateNumber"]</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Araç Rengi
+                                <span class="badge text-bg-primary rounded-pill">@TempData["CarColor"]</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Araç Kategorisi
+                                <span class="badge text-bg-primary rounded-pill">@TempData["CatName"]</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>

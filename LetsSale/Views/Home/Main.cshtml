@@ -1,0 +1,153 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Main";
+}
+
+@model IEnumerable<LetsSale.Models.CarDetailsViewModel>
+
+<div class="container-fluid">
+    <div class="accordion" id="modelsAccordion">
+        @foreach (var car in Model.DistinctBy(x=>x.Cars.CarBrand))
+        {
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#@car.Cars.CarBrand" aria-expanded="true" aria-controls="@car.Cars.CarBrand">
+                        <h1><strong>@car.Cars.CarBrand</strong></h1>
+                    </button>
+                </h2>
+                <div id="@car.Cars.CarBrand" class="accordion-collapse collapse show" data-bs-parent="#modelsAccordion">
+                    <div class="accordion-body">
+                        @foreach (var buttons in Model.Where(x=>x.Cars.CarBrand == car.Cars.CarBrand).DistinctBy(x=>x.Cars.CarCategoryID))
+                        {
+                            <p class="d-inline-flex me-2">
+                                <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#{@buttons.Categories.CatName}_{@buttons.Cars.CarBrand}" aria-expanded="false" aria-controls="@buttons.Categories.CatName">
+                                    @buttons.Categories.CatName
+                                </button>
+                            </p>
+                        }
+                        <div class="row">
+                            <div class="col-md-12">
+                                @foreach (var categories in Model.Where(x => x.Cars.CarBrand == car.Cars.CarBrand).DistinctBy(x=>x.Cars.CarCategoryID))
+                                {
+                                    <div class="row">
+                                        @foreach (var carDetails in Model.Where(x=>x.Cars.CarCategoryID == categories.Cars.CarCategoryID && x.Cars.CarBrand == categories.Cars.CarBrand))
+                                        {
+                                            <div class="col-md-12">
+                                                <div class="collapse multi-collapse" id="{@carDetails.Categories.CatName}_{@carDetails.Cars.CarBrand}">
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="card">
+                                                                <div class="card-body">
+                                                                    <h5 class="card-title">
+                                                                        <strong>
+                                                                            @carDetails.Cars.CarBrand @carDetails.Cars.CarName
+                                                                        </strong>
+                                                                    </h5>
+                                                                </div>
+                                                                <div id="@carDetails.Cars.CMainID" class="carousel slide">
+                                                                    <div class="carousel-inner">
+                                                                        <div class="carousel-item active">
+                                                                            <img src="@carDetails.Cars.CarMainPic" class="d-block w-100" alt="...">
+                                                                        </div>
+                                                                        @foreach (var pic in carDetails.Pics)
+                                                                        {
+                                                                            <div class="carousel-item">
+                                                                                <img src="@pic.CarPics" class="d-block w-100" alt="...">
+                                                                            </div>
+                                                                        }
+                                                                    </div>
+                                                                    <button class="carousel-control-prev" type="button" data-bs-target="#@carDetails.Cars.CMainID" data-bs-slide="prev">
+                                                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                                                        <span class="visually-hidden">Previous</span>
+                                                                    </button>
+                                                                    <button class="carousel-control-next" type="button" data-bs-target="#@carDetails.Cars.CMainID" data-bs-slide="next">
+                                                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                                                        <span class="visually-hidden">Next</span>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6 mb-3">
+                                                            <ul class="list-group">
+                                                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                    Beygir Gücü
+                                                                    <span class="badge text-bg-primary rounded-pill">@carDetails.Cars.CarHP HP</span>
+                                                                </li>
+                                                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                    Tork
+                                                                    <span class="badge text-bg-primary rounded-pill">@carDetails.Cars.CarTorque nm</span>
+                                                                </li>
+                                                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                    Azami Hız
+                                                                    <span class="badge text-bg-primary rounded-pill">@carDetails.Cars.CarMaxSpeed km/s</span>
+                                                                </li>
+                                                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                    Yakıt Kapasitesi
+                                                                    <span class="badge text-bg-primary rounded-pill">@carDetails.Cars.CarMaxFuelTankCapacity lt.</span>
+                                                                </li>
+                                                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                    Şanzıman
+                                                                    <span class="badge text-bg-primary rounded-pill">@carDetails.Cars.CarTransmission</span>
+                                                                </li>
+                                                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                    Bagaj Hacmi
+                                                                    <span class="badge text-bg-primary rounded-pill">@carDetails.Cars.CarCargoVolume lt.</span>
+                                                                </li>
+                                                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                    Araç Yılı
+                                                                    <span class="badge text-bg-primary rounded-pill">@carDetails.Cars.CarYear</span>
+                                                                </li>
+                                                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                    Araç Fiyatı
+                                                                    <span class="badge text-bg-primary rounded-pill">@carDetails.Cars.CarPrice ₺</span>
+                                                                </li>
+                                                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                    Araç Plakası
+                                                                    <span class="badge text-bg-primary rounded-pill">@carDetails.Cars.CarPlateNumber</span>
+                                                                </li>
+                                                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                    Araç Rengi
+                                                                    <span class="badge text-bg-primary rounded-pill">@carDetails.Cars.CarColor</span>
+                                                                </li>
+                                                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                    Araç Kategorisi
+                                                                    <span class="badge text-bg-primary rounded-pill">@carDetails.Categories.CatName</span>
+                                                                </li>
+                                                            </ul>
+                                                            <div class="btn-group mt-3 w-100" role="group" aria-label="Basic outlined example">
+                                                                <a class="btn btn-outline-primary w-50" data-bs-toggle="modal" data-bs-target="#BuyCarModal_{@carDetails.Cars.CMainID}">Aracı Satın Al</a>
+                                                            </div>
+                                                            <!-- BuyCar Modal -->
+                                                            <div class="modal fade" id="BuyCarModal_{@carDetails.Cars.CMainID}" tabindex="-1" aria-labelledby="BuyCarModal_{@carDetails.Cars.CMainID}" aria-hidden="true">
+                                                                <div class="modal-dialog">
+                                                                    <div class="modal-content">
+                                                                        <div class="modal-header">
+                                                                            <h5 class="modal-title" id="BuyCarModal_{@carDetails.Cars.CMainID}Lbl">Araç Alınıyor!</h5>
+                                                                        </div>
+                                                                        <div class="modal-body">
+                                                                            Lütfen Devam Etmek İçin Onay Veriniz.
+                                                                        </div>
+                                                                        <div class="modal-footer">
+                                                                            <a href="@Url.Action("BuyCar", "Home", new { CarID = carDetails.Cars.CMainID})" class="btn btn-primary">Satın Al</a>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

@@ -1,0 +1,128 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = "_LayoutAdmin";
+    ViewData["Title"] = "Main";
+    ViewData["AdminButton"] = "Araç Ekle";
+    ViewData["addLink"] = Url.Action("AddCar", "Employee");
+}
+
+@model IEnumerable<LetsSale.Models.CarDetailsViewModel>
+
+<!-- Deleted Modal -->
+<div class="modal fade" id="DeletedModal" tabindex="-1" aria-labelledby="DeletedModal" aria-hidden="true">
+    <div class="modal-dialog">
+        @if (TempData["SuccessMsg"] != null)
+        {
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="DeletedModalLbl">@TempData["SuccessTitle"]</h5>
+                </div>
+                <div class="modal-body">
+                    @TempData["SuccessMsg"]
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<div class="container-fluid">
+    @foreach (var item in Model.DistinctBy(x=> x.Notifies))
+    {
+        <div class="accordion mb-4" id="notifyAccordion">
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        <strong>Bildirimler</strong>
+                    </button>
+                </h2>
+                <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#notifyAccordion">
+                    <div class="accordion-body">
+                            @foreach (var notify in item.BuyCars)
+                            {
+                            <div class="list-group">
+                                <button type="button" data-bs-toggle="modal" data-bs-target="#SaleCarNotifyModal" class="list-group-item list-group-item-action list-group-item-warning mb-2  d-flex justify-content-between align-items-center">
+                                    <h3 class="text-sm-start">
+                                        @notify.UserDetailsList.UserName @notify.UserDetailsList.UserLastName
+                                    </h3>
+                                    Adlı Kişi Bu Aracı Almak İçin Bildirim Gönderdi
+                                    <h3 class="text-sm-center">
+                                        @notify.CarsList.CarBrand @notify.CarsList.CarName
+                                    </h3>
+                                    <span class="badge text-bg-primary rounded-pill">@notify.notify.NotifyTime</span>
+                                </button>
+                            </div>
+                            <div class="modal fade" id="SaleCarNotifyModal" tabindex="-1" aria-labelledby="SaleCarNotifyModal" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="SaleCarNotifyModalLbl">Onayla!</h5>
+                                        </div>
+                                        <div class="modal-body">
+                                            Lütfen Yapmak İstediğiniz İşlemi Seçiniz.
+                                        </div>
+                                        <div class="modal-footer">
+                                            <a class="btn btn-danger" href="@Url.Action("DeleteNotify", "Employee", new {NotifyID = notify.notify.NotifyID})">Bildirimi Sil</a>
+                                            <a class="btn btn-primary" href="@Url.Action("SaleCar", "Employee", new {CarID = notify.CarsList.CMainID})">Aracı Sat</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            }
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    <div class="accordion" id="modelsAccordion">
+        @foreach (var car in Model.DistinctBy(x => x.Cars.CarBrand))
+        {
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#@car.Cars.CarBrand" aria-expanded="true" aria-controls="@car.Cars.CarBrand">
+                        <h1><strong>@car.Cars.CarBrand</strong></h1>
+                    </button>
+                </h2>
+                <div id="@car.Cars.CarBrand" class="accordion-collapse collapse show" data-bs-parent="#modelsAccordion">
+                    <div class="accordion-body">
+                        @foreach (var buttons in Model.Where(x => x.Cars.CarBrand == car.Cars.CarBrand).DistinctBy(x => x.Cars.CarCategoryID))
+                        {
+                            <p class="d-inline-flex me-2">
+                                <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#{@buttons.Categories.CatName}_{@buttons.Cars.CarBrand}" aria-expanded="false" aria-controls="@buttons.Categories.CatName">
+                                    @buttons.Categories.CatName
+                                </button>
+                            </p>
+                        }
+                        <div class="row">
+                            <div class="col-md-12">
+                                @foreach (var categories in Model.Where(x => x.Cars.CarBrand == car.Cars.CarBrand).DistinctBy(x => x.Cars.CarCategoryID))
+                                {
+                                    <div class="row">
+                                        @foreach (var carDetails in Model.Where(x => x.Cars.CarCategoryID == categories.Cars.CarCategoryID && x.Cars.CarBrand == categories.Cars.CarBrand))
+                                        {
+                                            <div class="col-md-4">
+                                                <div class="collapse multi-collapse" id="{@carDetails.Categories.CatName}_{@carDetails.Cars.CarBrand}">
+                                                    <div class="card card-body">
+                                                        <h1 class="card-title fw-semibold mb-4"><strong>@carDetails.Categories.CatName</strong></h1>
+                                                        <div class="card">
+                                                            <img src="@carDetails.Cars.CarMainPic" class="card-img-top" alt="...">
+                                                            <div class="card-body">
+                                                                <h5 class="card-title">@carDetails.Cars.CarBrand @carDetails.Cars.CarName</h5>
+                                                                <a href="@Url.Action("InspectCar","Employee" , new {CarID=carDetails.Cars.CMainID })" class="btn btn-primary w-100">İncele</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

@@ -1,0 +1,137 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = "_LayoutAdmin";
+    ViewData["Title"] = "Main";
+    ViewData["AdminButton"] = "Araç Ekle";
+    ViewData["addLink"] = Url.Action("AddCar", "Employee");
+}
+
+@model LetsSale.Models.AddCarViewModel
+
+<!-- AddCar Modal -->
+<div class="modal fade" id="AddCarModal" tabindex="-1" aria-labelledby="AddCarModal" aria-hidden="true">
+    <div class="modal-dialog">
+        @if (TempData["SuccessMsg"] != null)
+        {
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="AddCarModalLbl">@TempData["SuccessTitle"]</h5>
+                </div>
+                <div class="modal-body">
+                    @TempData["SuccessMsg"]
+                </div>
+                <div class="modal-footer">
+                    <a href="@Url.Action("AddCar", "Employee")" class="btn btn-primary">Close</a>
+                </div>                   
+            </div>
+        }
+        else if (TempData["FailMsg"] != null)
+        {
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="AddCarModalLbl">@TempData["FailTitle"]</h5>
+                </div>
+                <div class="modal-body">
+                    @TempData["FailMsg"]
+                </div>
+                <div class="modal-footer">
+                    <a href="@Url.Action("AddCar", "Employee")" class="btn btn-danger" data-bs-dismiss="modal">Close</a>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+<!-- IsEmpty Modal -->
+<div class="modal fade" id="IsEmptyModal" tabindex="-1" aria-labelledby="IsEmptyModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="IsEmptyModalLbl">Hey Hey Hey</h5>
+            </div>
+            <div class="modal-body">
+                Tüm Boşlukları Doldurun Lütfen!
+            </div>
+            <div class="modal-footer">
+                <a href="@Url.Action("AddCar", "Employee")" class="btn btn-danger" data-bs-dismiss="modal">Close</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title fw-semibold mb-4">Yeni Araç Ekle</h5>
+                <div class="card">
+                    <div class="card-body">
+                        <form method="post" enctype="multipart/form-data">
+                                <div class="mb-3">
+                                    <label for="CarBrand" class="form-label">Araç Markası</label>
+                                    <input required asp-for="CarBrand" type="text" class="form-control" id="CarBrand">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="CarName" class="form-label">Araç Adı</label>
+                                    <input required asp-for="CarName" type="text" class="form-control" id="CarName">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="CarPrice" class="form-label">Araç Ücreti</label>
+                                    <input required asp-for="CarPrice" type="number" class="form-control" id="CarPrice">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="CarPlate" class="form-label">Araç Plakası</label>
+                                    <input required asp-for="CarPlateNumber" type="text" class="form-control" id="CarPlate">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="CarYear" class="form-label">Araç Yılı</label>
+                                    <input required asp-for="CarYear" type="number" class="form-control" id="CarYear">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="CarColor" class="form-label">Araç Rengi</label>
+                                    <input required asp-for="CarColor" type="text" class="form-control" id="CarColor">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="CarPics" class="form-label">Araç Resmi</label>
+                                    <input required asp-for="CarMainPic" name="carPics" type="file" class="form-control" id="CarPics" multiple>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="CarHP" class="form-label">Beygir Gücü</label>
+                                    <input required asp-for="CarHP" type="number" class="form-control" id="CarHP">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="CarTorque" class="form-label">Tork</label>
+                                    <input required asp-for="CarTorque" type="number" class="form-control" id="CarTorque">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="CarMaxFuelTankCapacity" class="form-label">Yakıt Kapasitesi</label>
+                                    <input required asp-for="CarMaxFuelTankCapacity" type="number" class="form-control" id="CarMaxFuelTankCapacity">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="CarTransmission" class="form-label">Şanzıman</label>
+                                    <input required asp-for="CarTransmission" type="text" class="form-control" id="CarTransmission">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="CarMaxSpeed" class="form-label">Azami Hız</label>
+                                    <input required asp-for="CarMaxSpeed" type="number" class="form-control" id="CarMaxSpeed">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="CarCargoVolume" class="form-label">Bagaj Hacmi</label>
+                                    <input required asp-for="CarCargoVolume" type="number" class="form-control" id="CarCargoVolume">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="CarCategory" class="form-label">Araç Kategorisi</label>
+                                    <select  required asp-for="CarCategoryID" asp-items="Model.CarCategories" id="CarCategory" class="form-select">
+                                        <option selected disabled>Bir Kategori Seçin</option>
+                                    </select>
+                                </div>
+                                <button id="SubmitBtn" type="submit" class="btn btn-primary">Ekle</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

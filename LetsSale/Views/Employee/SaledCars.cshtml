@@ -1,0 +1,188 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = "_LayoutAdmin";
+    ViewData["Title"] = "Main";
+    ViewData["AdminButton"] = "Araç Ekle";
+    ViewData["addLink"] = Url.Action("Register", "Account");
+    int counter = 1;
+
+}
+
+@model IEnumerable<LetsSale.Models.CarDetailsViewModel>
+
+<!-- Deleted Modal -->
+<div class="modal fade" id="DeletedModal" tabindex="-1" aria-labelledby="DeletedModal" aria-hidden="true">
+    <div class="modal-dialog">
+        @if (TempData["SuccessMsg"] != null)
+        {
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="DeletedModalLbl">@TempData["SuccessTitle"]</h5>
+                </div>
+                <div class="modal-body">
+                    @TempData["SuccessMsg"]
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-4 d-flex align-items-stretch">
+        <div class="card w-100">
+            <div class="card-body p-4">
+                <div class="mb-4">
+                    <h5 class="card-title fw-semibold">Geçmiş Satışlar</h5>
+                </div>
+                <ul class="timeline-widget mb-0 position-relative mb-n5">
+                    @foreach (var car in Model)
+                    {
+                        <li class="timeline-item d-flex position-relative overflow-hidden">
+                            <div class="timeline-time text-dark flex-shrink-0 text-end">@car.SaledCars.SCarSaleDate.ToString("HH:mm")</div>
+                            <div class="timeline-badge-wrap d-flex flex-column align-items-center">
+                                <span class="timeline-badge border-2 border border-primary flex-shrink-0 my-8"></span>
+                                <span class="timeline-badge-border d-block flex-shrink-0"></span>
+                            </div>
+                            <div class="timeline-desc fs-3 text-dark mt-n1 fw-semibold">
+                                @car.SaledCars.SCarBrand @car.SaledCars.SCarName
+                                <a href="javascript:void(0)" class="text-primary d-block fw-normal">@car.Categories.CatName</a>
+                            </div>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-8 d-flex align-items-stretch">
+        <div class="card w-100">
+            <div class="card-body p-4">
+                <div class="table-responsive">
+                    <table class="table text-nowrap mb-0 align-middle">
+                        <thead class="text-dark fs-4">
+                            <tr>
+                                <th class="border-bottom-0">
+                                    <h6 class="fw-semibold mb-0">Id</h6>
+                                </th>
+                                <th class="border-bottom-0">
+                                    <h6 class="fw-semibold mb-0">Satış Personeli</h6>
+                                </th>
+                                <th class="border-bottom-0">
+                                    <h6 class="fw-semibold mb-0">Müşteri</h6>
+                                </th>
+                                <th class="border-bottom-0">
+                                    <h6 class="fw-semibold mb-0">Plaka</h6>
+                                </th>
+                                <th class="border-bottom-0">
+                                    <h6 class="fw-semibold mb-0">Fiyat</h6>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var car in Model)
+                            {
+                                <tr>
+                                    <td class="border-bottom-0"><h6 class="fw-semibold mb-0">@counter</h6></td>
+                                    <td class="border-bottom-0">
+                                        <h6 class="fw-semibold mb-1">@car.EmployeeDetails.EName @car.EmployeeDetails.ELastName</h6>
+                                        <span class="fw-normal">@car.Ranks.ERankName</span>
+                                    </td>
+                                    <td class="border-bottom-0">
+                                        <p class="mb-0 fw-normal">@car.UserDetails.UserName @car.UserDetails.UserLastName</p>
+                                    </td>
+                                    <td class="border-bottom-0">
+                                        <h6 class="fw-semibold mb-0 fs-4">
+                                            @car.SaledCars.SCarPlateNumber
+                                        </h6>
+                                    </td>
+                                    <td class="border-bottom-0">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <span class="badge bg-primary rounded-3 fw-semibold">
+                                                @car.SaledCars.SCarPrice <strong>₺</strong>
+                                            </span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                counter++;
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="accordion" id="modelsAccordion">
+        @foreach (var car in Model.DistinctBy(x => x.SaledCars.SCarBrand))
+        {
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#@car.SaledCars.SCarBrand" aria-expanded="true" aria-controls="@car.SaledCars.SCarBrand">
+                        <h1><strong>@car.SaledCars.SCarBrand</strong></h1>
+                    </button>
+                </h2>
+                <div id="@car.SaledCars.SCarBrand" class="accordion-collapse collapse" data-bs-parent="#modelsAccordion">
+                    <div class="accordion-body">
+                        @foreach (var buttons in Model.Where(x => x.SaledCars.SCarBrand == car.SaledCars.SCarBrand).DistinctBy(x => x.SaledCars.SCarCategoryID))
+                        {
+                            <p class="d-inline-flex me-2">
+                                <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#{@buttons.Categories.CatName}_{@buttons.SaledCars.SCarBrand}" aria-expanded="false" aria-controls="@buttons.Categories.CatName">
+                                    @buttons.Categories.CatName
+                                </button>
+                            </p>
+                        }
+                        <div class="row">
+                            <div class="col-md-12">
+                                @foreach (var categories in Model.Where(x => x.SaledCars.SCarBrand == car.SaledCars.SCarBrand).DistinctBy(x => x.SaledCars.SCarCategoryID))
+                                {
+                                    <div class="row">
+                                        @foreach (var carDetails in Model.Where(x => x.SaledCars.SCarCategoryID == categories.SaledCars.SCarCategoryID && x.SaledCars.SCarBrand == categories.SaledCars.SCarBrand))
+                                        {
+                                            <div class="col-md-6">
+                                                <div class="collapse multi-collapse" id="{@carDetails.Categories.CatName}_{@carDetails.SaledCars.SCarBrand}">
+                                                    <div class="card card-body">
+                                                        <h1 class="card-title fw-semibold mb-4"><strong>@carDetails.Categories.CatName</strong></h1>
+                                                        <div class="card">
+                                                            <img src="@carDetails.SaledCars.SCarMainPic" class="card-img-top" alt="...">
+                                                            <div class="card-body">
+                                                                <h5 class="card-title">@carDetails.SaledCars.SCarBrand @carDetails.SaledCars.SCarName</h5>
+                                                                <ul class="list-group">
+                                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                        Satış Yapan Personel
+                                                                        <span class="badge text-bg-primary rounded-pill">@carDetails.EmployeeDetails.EName @carDetails.EmployeeDetails.ELastName</span>
+                                                                    </li>
+                                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                        Aracı Alan Müşteri
+                                                                        <span class="badge text-bg-primary rounded-pill">@carDetails.UserDetails.UserName @carDetails.UserDetails.UserLastName</span>
+                                                                    </li>
+                                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                        Araç Plakası
+                                                                        <span class="badge text-bg-primary rounded-pill">@carDetails.SaledCars.SCarPlateNumber</span>
+                                                                    </li>
+                                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                        Araç Ücreti
+                                                                        <span class="badge text-bg-primary rounded-pill">@carDetails.SaledCars.SCarPrice ₺</span>
+                                                                    </li>
+                                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                        Araç Satış Tarihi
+                                                                        <span class="badge text-bg-primary rounded-pill">@carDetails.SaledCars.SCarSaleDate</span>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

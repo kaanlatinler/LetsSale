@@ -1,0 +1,120 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = "_LayoutAdmin";
+    ViewData["Title"] = "Servis";
+    ViewData["addLink"] = Url.Action("Logout", "Account");
+    ViewData["AdminButton"] = "Çıkış";
+
+}
+
+@model IEnumerable<LetsSale.Models.CarDetailsViewModel>
+
+<div class="container-fluid">
+    @foreach (var item in Model.DistinctBy(x=>x.Notifies))
+    {
+        <div class="accordion mb-4" id="notifyAccordion">
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        <strong>Bildirimler</strong>
+                    </button>
+                </h2>
+                <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#notifyAccordion">
+                    <div class="accordion-body">
+                        @foreach (var notify in item.BuyCars)
+                        {
+                            <div class="list-group">
+                                <button type="button" data-bs-toggle="modal" data-bs-target="#TakeCarNotifyModal" class="list-group-item list-group-item-action list-group-item-warning mb-2  d-flex justify-content-between align-items-center">
+                                    <h3 class="text-sm-start">
+                                        @notify.UserDetailsList.UserName @notify.UserDetailsList.UserLastName
+                                    </h3>
+                                    Adlı Kişi Bu Aracı Servise Göndermek İstiyor
+                                    <h3 class="text-sm-center">
+                                        @notify.CarsList.CarBrand @notify.CarsList.CarName
+                                    </h3>
+                                    <span class="badge text-bg-primary rounded-pill">@notify.notify.NotifyTime</span>
+                                </button>
+                            </div>
+                            <div class="modal fade" id="TakeCarNotifyModal" tabindex="-1" aria-labelledby="TakeCarNotifyModal" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="TakeCarNotifyModalLbl">Onayla!</h5>
+                                        </div>
+                                        <div class="modal-body">
+                                            Lütfen Yapmak İstediğiniz İşlemi Seçiniz.
+                                        </div>
+                                        <div class="modal-footer">
+                                            <a class="btn btn-danger" href="@Url.Action("DeleteNotify", "Employee", new {NotifyID = notify.notify.NotifyID})">Bildirimi Sil</a>
+                                            <a class="btn btn-primary" href="@Url.Action("TakeCar", "Services", new {CarID = notify.CarsList.CMainID, UserID = notify.UserDetailsList.UMainID})">Aracı Servise Al</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    <div class="row">
+        @foreach (var item in Model.DistinctBy(x=>x.ServiceCars))
+        {
+            foreach (var car in item.Services)
+            {
+                <div class="col-sm-6 mb-3 mb-sm-0">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title"><strong> @car.UserCars.CarBrand @car.UserCars.CarName </strong></h5>
+                            <ul class="list-group mb-3">
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Araç Plakası
+                                    <span class="badge text-bg-primary rounded-pill">@car.UserCars.CarPlateNumber</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Araç Yılı
+                                    <span class="badge text-bg-primary rounded-pill">@car.UserCars.CarYear</span>
+                                </li>
+                            </ul>
+                            <h5 class="card-title"><strong>Araç Sahibi</strong></h5>
+                            <p class="card-text">@car.UserDetails.UserName @car.UserDetails.UserLastName</p>
+                            <h5 class="card-title"><strong>Servise Giriş</strong></h5>
+                            <p class="card-text">@car.ServiceCars.SstartDate</p>
+                            <!-- Button trigger modal -->
+                            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#FinishModal">
+                                Bitir
+                            </button>
+
+                            <!-- Modal -->
+                            <div class="modal fade" id="FinishModal" tabindex="-1" aria-labelledby="FinishModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h1 class="modal-title fs-5" id="FinishModalLabel">@car.UserCars.CarBrand @car.UserCars.CarName</h1>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <form method="post">
+                                        <div class="modal-body">
+                                                <div class="mb-3">
+                                                    <label for="desc" class="form-label">Açıklama</label>
+                                                    <input type="text" class="form-control" id="desc" name="SDesc" aria-describedby="desc">
+                                                    <input type="hidden" class="form-control" value="@car.ServiceCars.SMainID" name="SMainID">
+                                                </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                                            <button type="submit" class="btn btn-primary">Save changes</button>
+                                        </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>

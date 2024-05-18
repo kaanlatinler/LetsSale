@@ -1,0 +1,146 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = "_LayoutAdmin";
+    ViewData["Title"] = "Main";
+    ViewData["AdminButton"] = "Araç Ekle";
+    ViewData["addLink"] = Url.Action("AddCar", "Employee");
+}
+@model IEnumerable<LetsSale.Models.CarDetailsViewModel>
+
+@foreach (var car in Model)
+{
+    <!-- Delete Modal -->
+    <div class="modal fade" id="DeleteCarModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="DeleteCarModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="DeleteCarModalLabel">@car.Cars.CarBrand @car.Cars.CarName Adlı Araç Silinecek</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Araç Kalıcı Olarak Silinecektir Bundan Eminmisiniz?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <a href="@Url.Action("DeleteCar","Employee", new {CarID=car.Cars.CMainID })" class="btn btn-danger">Aracı Sil</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sale Modal -->
+    <div class="modal fade" id="SaleCarModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="SaleCarModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="SaleCarModalLabel">@car.Cars.CarBrand @car.Cars.CarName Adlı Araç Silinecek</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Araç Satılıyor Bundan Eminmisiniz?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <a href="@Url.Action("SaleCar", "Employee", new { CarID = car.Cars.CMainID})" class="btn btn-danger">Aracı Sat</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <strong>
+                                @car.Cars.CarBrand @car.Cars.CarName
+                            </strong>
+                        </h5>
+                    </div>
+                    <div id="carouselExample" class="carousel slide">
+                        <div class="carousel-inner">
+                            @foreach (var pic in car.Pics)
+                            {
+                                <div class="carousel-item @(pic == car.Pics.First() ? "active" : "")">
+                                    <img src="@pic.CarPics" class="d-block w-100" alt="...">
+                                </div>
+                            }
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <ul class="list-group">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Beygir Gücü
+                        <span class="badge text-bg-primary rounded-pill">@car.Cars.CarHP HP</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Tork
+                        <span class="badge text-bg-primary rounded-pill">@car.Cars.CarTorque nm</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Azami Hız
+                        <span class="badge text-bg-primary rounded-pill">@car.Cars.CarMaxSpeed km/s</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Yakıt Kapasitesi
+                        <span class="badge text-bg-primary rounded-pill">@car.Cars.CarMaxFuelTankCapacity lt.</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Şanzıman
+                        <span class="badge text-bg-primary rounded-pill">@car.Cars.CarTransmission</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Bagaj Hacmi
+                        <span class="badge text-bg-primary rounded-pill">@car.Cars.CarCargoVolume lt.</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Araç Yılı
+                        <span class="badge text-bg-primary rounded-pill">@car.Cars.CarYear</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Araç Fiyatı
+                        <span class="badge text-bg-primary rounded-pill">@car.Cars.CarPrice ₺</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Araç Plakası
+                        <span class="badge text-bg-primary rounded-pill">@car.Cars.CarPlateNumber</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Araç Rengi
+                        <span class="badge text-bg-primary rounded-pill">@car.Cars.CarColor</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Araç Kategorisi
+                        <span class="badge text-bg-primary rounded-pill">@car.Categories.CatName</span>
+                    </li>
+                </ul>
+                <div class="btn-group mt-3 w-100" role="group" aria-label="Basic outlined example">
+                    <a class="btn btn-outline-danger w-50" data-bs-toggle="modal" data-bs-target="#DeleteCarModal">Aracı Sil</a>
+                    <a class="btn btn-outline-primary w-50" data-bs-toggle="modal" data-bs-target="#SaleCarModal">Aracı Sat</a>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-5">
+                @foreach (var pic in car.Pics)
+                {
+                    <div class="col-sm-4 item">
+                        <a href="@pic.CarPics" data-lightbox="photos">
+                            <img class="img-fluid mt-4" src="@pic.CarPics">
+                        </a>
+                    </div>
+                }
+        </div>
+    </div>
+}

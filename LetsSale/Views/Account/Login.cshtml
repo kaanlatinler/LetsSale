@@ -1,0 +1,171 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "Login";
+    Layout = null;
+}
+@model LetsSale.Models.LoginViewModel
+
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@ViewData["Title"] | Let's Sale</title>
+    <link rel="shortcut icon" type="image/png" href="~/template/dashboard/assets/images/logos/favicon.png" />
+    <link rel="stylesheet" href="~/template/dashboard/assets/css/styles.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+
+<body>
+    <!-- Login Modal -->
+    <div class="modal fade" id="LoginModal" tabindex="-1" aria-labelledby="LoginModal" aria-hidden="true">
+        <div class="modal-dialog">
+            @if (TempData["SuccessMsg"] != null)
+            {
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="LoginModalLbl">@TempData["LoginTitle"]</h5>
+                    </div>
+                    <div class="modal-body">
+                        @TempData["SuccessMsg"]
+                    </div>
+                </div>
+            }
+            else if (TempData["FailMsg"] != null)
+            {
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="LoginModalLbl">@TempData["LoginTitle"]</h5>
+                    </div>
+                    <div class="modal-body">
+                        @TempData["FailMsg"]
+                    </div>
+                    <div class="modal-footer">
+                        <a href="@Url.Action("Login", "Account")" class="btn btn-danger" data-bs-dismiss="modal">Close</a>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+    <!-- IsEmpty Modal -->
+    <div class="modal fade" id="IsEmptyModal" tabindex="-1" aria-labelledby="IsEmptyModal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="IsEmptyModalLbl">Hey Hey Hey</h5>
+                </div>
+                <div class="modal-body">
+                    Tüm Boşlukları Doldurun Lütfen!
+                </div>
+                <div class="modal-footer">
+                    <a href="@Url.Action("Login", "Account")" class="btn btn-danger" data-bs-dismiss="modal">Close</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--  Body Wrapper -->
+    <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+         data-sidebar-position="fixed" data-header-position="fixed">
+        <div class="position-relative overflow-hidden radial-gradient min-vh-100 d-flex align-items-center justify-content-center">
+            <div class="d-flex align-items-center justify-content-center w-100">
+                <div class="row justify-content-center w-100">
+                    <div class="col-md-8 col-lg-6 col-xxl-3">
+                        <div class="card mb-0">
+                            <div class="card-body">
+                                <a href="./index.html" class="text-nowrap logo-img text-center d-block py-3 w-100">
+                                    <img src="~/template/dashboard/assets/images/logos/dark-logo.svg" width="180" alt="">
+                                </a>
+                                <p class="text-center">Your Social Campaigns</p>
+                                <form method="post">
+                                    <div class="mb-3">
+                                        <label for="LoginMail" class="form-label">Email</label>
+                                        <input required asp-for="UserEmail" type="email" class="form-control" id="LoginMail" aria-describedby="emailHelp">
+                                    </div>
+                                    <div class="mb-4">
+                                        <label for="loginPass" class="form-label">Password</label>
+                                        <div class="input-group">
+                                            <button type="button" class="btn btn-primary" id="showPass">
+                                                <i id="showPassIco" class="bi bi-eye-fill"></i>
+                                            </button>
+                                            <input required asp-for="UserPassword" type="password" class="form-control" aria-describedby="showPass" id="loginPass">
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-center justify-content-between mb-4">
+                                        <a class="text-primary fw-bold" href="./index.html">Forgot Password ?</a>
+                                    </div>
+                                    <button id="SubmitBtn" type="submit" class="btn btn-primary w-100 py-8 fs-4 mb-4 rounded-2">Sign In</button>
+                                    <div class="d-flex align-items-center justify-content-center">
+                                        <p class="fs-4 mb-0 fw-bold">New to Modernize?</p>
+                                        <a class="text-primary fw-bold ms-2" href="@Url.Action("Register", "Account")">Create an account</a>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="~/template/dashboard/assets/libs/jquery/dist/jquery.min.js"></script>
+    <script src="~/template/dashboard/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var isPass = true;
+
+            $('#showPass').click(function () {
+                var ico = $('#showPassIco');
+                var pass = $('#loginPass');
+
+                if (isPass) {
+                    ico.removeClass('bi-eye-fill').addClass('bi-eye-slash-fill');
+                    pass.attr('type', 'text');
+                } else {
+                    ico.removeClass('bi-eye-slash-fill').addClass('bi-eye-fill');
+                    pass.attr('type', 'password');
+                }
+
+                isPass = !isPass;
+            });
+
+            $('#SubmitBtn').click(function () {
+                var inputs = $('input[required]');
+                var allInputsFilled = true;
+                inputs.each(function () {
+                    if ($(this).val() === '') {
+                        allInputsFilled = false;
+                        return false;
+                    }
+                });
+
+                if (allInputsFilled) {
+                    $('form').submit();
+                } else {
+                    var modal = $('#IsEmptyModal');
+                    modal.modal('show');
+                }
+            });
+
+            if ("@TempData["SuccessMsg"]" !== "" || "@TempData["FailMsg"]" !== "") {
+                var signModal = document.getElementById('LoginModal');
+                var bootstrapModal = new bootstrap.Modal(signModal);
+                bootstrapModal.show();
+
+                if ("@TempData["user"]" == "user") {
+                    setTimeout(function () {
+                        window.location.href = "@Url.Action("Main", "Home")";
+                    }, 2000);
+                } else if ("@TempData["user"]" == "employee") {
+                    setTimeout(function () {
+                        window.location.href = "@Url.Action("Index", "Employee")";
+                    }, 2000);
+                }
+            }
+        });
+    </script>
+
+</body>
+
+</html>

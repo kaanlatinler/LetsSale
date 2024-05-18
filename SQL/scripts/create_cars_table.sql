@@ -1,0 +1,20 @@
+CREATE TABLE Cars (
+    CarsID int identity primary key,
+    CMainID uniqueidentifier not null,
+    CarName nvarchar(20) not null,
+    CarBrand nvarchar(20) not null,
+    CarPrice int not null,
+    CarPlateNumber nvarchar(20) not null,
+    CarYear int not null,
+	CarColor nvarchar(20) not null,
+	CarHP int not null,
+	CarTorque int not null,
+	CarMaxFuelTankCapacity int not null,
+	CarMaxSpeed int not null,
+	CarTransmission nvarchar(10) not null,
+	CarCargoVolume int not null,
+	CarMainPic nvarchar(max) not null,
+	CarPicsID int Not null,
+	CarCategoryID int not null,
+	EmployeeID uniqueidentifier not null
+)
